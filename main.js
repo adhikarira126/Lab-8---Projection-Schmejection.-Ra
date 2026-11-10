@@ -54,7 +54,8 @@ function initScene() {
         bounds[j].addEventListener('input', updateScene);
     }
 
-    document.getElementById('addPointBTN').addEventListener('click', () => addPoint(xINP.valueAsNumber, yINP.valueAsNumber, zINP.valueAsNumber));
+    document.getElementById('addPointBTN').addEventListener('click', () =>
+        addPoint(...newPointCoordinates.map(input => input.valueAsNumber)));
     document.getElementById('resetBTN').addEventListener('click', resetScene);
 
     gl.viewport(0, 0, canvas.clientWidth, canvas.clientHeight);
