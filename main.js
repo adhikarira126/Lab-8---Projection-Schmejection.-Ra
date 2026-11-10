@@ -51,18 +51,19 @@ function initScene() {
 
     // each time a new value is entered, recalculate projMat and re-render points
     for (let j = 0; j < bounds.length; j++) {
-        bounds[j].addEventListener('input', () => {
-            recalculateProjMat(leftINP.valueAsNumber, rightINP.valueAsNumber, bottomINP.valueAsNumber, topINP.valueAsNumber, nearINP.valueAsNumber, farINP.valueAsNumber);
-            points.render(projMat);
-            drawTable();
-        })
-    };
+        bounds[j].addEventListener('input', updateScene);
+    }
 
     document.getElementById('addPointBTN').addEventListener('click', () => addPoint(xINP.valueAsNumber, yINP.valueAsNumber, zINP.valueAsNumber));
-    document.getElementById('resetBTN').addEventListener('click', resetScene);   // NEW
+    document.getElementById('resetBTN').addEventListener('click', resetScene);
 
     gl.viewport(0, 0, canvas.clientWidth, canvas.clientHeight);
-    recalculateProjMat(leftINP.valueAsNumber, rightINP.valueAsNumber, bottomINP.valueAsNumber, topINP.valueAsNumber, nearINP.valueAsNumber, farINP.valueAsNumber);
+    updateScene();
+}
+
+// Reads the viewing-volume inputs, rebuilds projMat, redraws the points and the table
+function updateScene() {
+    recalculateProjMat(...bounds.map(input => input.valueAsNumber));
     points.render(projMat);
     drawTable();
 }
@@ -79,11 +80,10 @@ function recalculateProjMat(l, r, b, t, n, f) {
 
 function addPoint(x, y, z) {
     points.points3D.push(x, y, z); // add points to the array
-    points.render(projMat);
-    drawTable();
+    updateScene();
 }
 
-// NEW: Restores the original viewing volume and the original 2 points
+// Restores the original viewing volume and the original 2 points
 function resetScene() {
     const defaults = [-4, 4, -3, 3, 1, 10]; // left, right, bottom, top, near, far
     for (let i = 0; i < bounds.length; i++) {
@@ -96,9 +96,7 @@ function resetScene() {
     ];
 
     gl.clear(gl.COLOR_BUFFER_BIT); // wipe the old points off the canvas
-    recalculateProjMat(...defaults);
-    points.render(projMat);
-    drawTable();
+    updateScene();
 }
 
 function drawTable() {
