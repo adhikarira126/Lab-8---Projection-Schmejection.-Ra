@@ -96,7 +96,7 @@ function resetScene() {
         1, 2, -5
     ];
 
-    gl.clear(gl.COLOR_BUFFER_BIT); // wipe the old points off the canvas
+    
     updateScene();
 }
 
