@@ -33,25 +33,34 @@ class Points {
     }
 
     // called by render() 
-    recalculatePointsNDC(projMat) {
-        this.pointsNDC = [];
-        this.points3DInsideViewVolume = [];
+   recalculatePointsNDC(projMat) {
+    this.pointsNDC = [];
+    this.points3DInsideViewVolume = [];
 
-        for (let j = 0; j < this.points3D.length; j += 3) {
-            let x = this.points3D[j];
-            let y = this.points3D[j + 1];
-            let z = this.points3D[j + 2];
+    for (let j = 0; j < this.points3D.length; j += 3) {
+        let x = this.points3D[j];
+        let y = this.points3D[j + 1];
+        let z = this.points3D[j + 2];
 
-            // TODO:
-            // 1. Represent this point in homogeneous coordinates.
-            // 2. Apply projMat to obtain clip coordinates.
-            // 3. Perform the perspective division to obtain NDC.
-            // 4. Append a Boolean to points3DInsideViewVolume indicating
-            //    whether all three NDC coordinates are within [-1, 1].
-            // 5. Append the NDC x, y, and z coordinates to pointsNDC,
-            //    regardless of whether the point is visible.
-        }
+        // 1. homogeneous coordinates
+        const pointHomogeneous = vec4.fromValues(x, y, z, 1);
+
+        // 2. apply projMat -> clip coordinates
+        const clip = vec4.transformMat4(vec4.create(), pointHomogeneous, projMat);
+
+        // 3. perspective division -> NDC
+        const xNDC = clip[0] / clip[3];
+        const yNDC = clip[1] / clip[3];
+        const zNDC = clip[2] / clip[3];
+
+        // 4. visible only if all three NDC coords are in [-1, 1]
+        const inRange = (v) => v >= -1 && v <= 1;
+        this.points3DInsideViewVolume.push(inRange(xNDC) && inRange(yNDC) && inRange(zNDC));
+
+        // 5. always store the NDC coords
+        this.pointsNDC.push(xNDC, yNDC, zNDC);
     }
+}
 
     numPoints() {
         return this.points3D.length / 3;

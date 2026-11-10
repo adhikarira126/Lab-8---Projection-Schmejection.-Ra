@@ -1,5 +1,15 @@
 "use strict";
 
+/*
+ * Name: Rachin Adhikari
+ * Date: 11/9/2026
+ * Description: Lab 8 - Projection, Schmejection. Builds a perspective projection
+ *              matrix from a user-defined viewing volume, converts 3D points to NDC,
+ *              reports whether each point is visible, and draws visible points.
+ * Bugs: None known
+ * Reflection: See README.md
+ */
+
 // @ts-check
 // handy-dandy shortcut
 const { mat4, mat3, vec4, vec3, vec2 } = glMatrix;
@@ -49,6 +59,7 @@ function initScene() {
     };
 
     document.getElementById('addPointBTN').addEventListener('click', () => addPoint(xINP.valueAsNumber, yINP.valueAsNumber, zINP.valueAsNumber));
+    document.getElementById('resetBTN').addEventListener('click', resetScene);   // NEW
 
     gl.viewport(0, 0, canvas.clientWidth, canvas.clientHeight);
     recalculateProjMat(leftINP.valueAsNumber, rightINP.valueAsNumber, bottomINP.valueAsNumber, topINP.valueAsNumber, nearINP.valueAsNumber, farINP.valueAsNumber);
@@ -56,13 +67,37 @@ function initScene() {
     drawTable();
 }
 
+// Builds a perspective (frustum) projection matrix in column-major order (same as gl-matrix / WebGL)
 function recalculateProjMat(l, r, b, t, n, f) {
-    projMat = []; // fix this to build a projection matrix for perspective projection
+    projMat = mat4.fromValues(
+        2 * n / (r - l),     0,                   0,                        0,   // column 0
+        0,                   2 * n / (t - b),     0,                        0,   // column 1
+        (r + l) / (r - l),   (t + b) / (t - b),   -(f + n) / (f - n),      -1,   // column 2
+        0,                   0,                   -2 * f * n / (f - n),     0    // column 3
+    );
 }
 
 function addPoint(x, y, z) {
     points.points3D.push(x, y, z); // add points to the array
-    points.render(projMat);  
+    points.render(projMat);
+    drawTable();
+}
+
+// NEW: Restores the original viewing volume and the original 2 points
+function resetScene() {
+    const defaults = [-4, 4, -3, 3, 1, 10]; // left, right, bottom, top, near, far
+    for (let i = 0; i < bounds.length; i++) {
+        bounds[i].value = defaults[i];
+    }
+
+    points.points3D = [
+        2, 1, -3,
+        1, 2, -5
+    ];
+
+    gl.clear(gl.COLOR_BUFFER_BIT); // wipe the old points off the canvas
+    recalculateProjMat(...defaults);
+    points.render(projMat);
     drawTable();
 }
 
