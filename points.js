@@ -11,9 +11,9 @@ class Points {
         1, 2, -5
     ];
 
-    points3DInsideViewVolume = [true, true];
+     points3DInsideViewVolume = []; // filled in by recalculatePointsNDC()
 
-    pointsNDC = [0.17, 0.11, 0.48, 0.05, 0.13, 0.78];
+            pointsNDC = [];                // filled in by recalculatePointsNDC()
 
     render(projMat) {
 
