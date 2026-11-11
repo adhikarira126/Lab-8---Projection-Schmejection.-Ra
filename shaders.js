@@ -13,8 +13,7 @@ void main() {
 const fragmentShaderSource = `#version 300 es
 precision mediump float;
 
-uniform vec4 uColor;
-out vec4 fragColor; // the type 
+out vec4 fragColor; // the output color of the fragment
 void main() {
     fragColor = vec4(1.0, 0.0, 0.0, 1.0);
 }

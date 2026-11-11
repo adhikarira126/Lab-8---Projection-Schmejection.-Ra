@@ -7,38 +7,32 @@
     <title>Document</title>
     <link rel="stylesheet" href="styles.css">
     <style>
-        table {
-            width: 100%;
-            margin: 1rem 0;
-            border-collapse: collapse;
-            text-align: left;
-        }
+        body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
-        th,
-        td {
-            padding: 0.6rem 0.75rem;
-            border-bottom: 1px solid #d5dce5;
-        }
+canvas {
+    border: 2px solid black;
+}
 
-        th {
-            background: #eef3f8;
-        }
+#main{
+    display:flex ;
+    flex-direction: column;
+}
 
-        tbody tr:nth-child(even) {
-            background: #f8fafc;
-        }
-
-        input,
-        button {
-            padding: 0.4rem 0.55rem;
-            border: 1px solid #b8c2ce;
-            border-radius: 4px;
-        }
-
-        button {
-            background: #eef3f8;
-            cursor: pointer;
-        }
+input, output {
+    display: inline-block;
+    width:auto
+}
+label {
+    display: inline-block;
+    text-align: right;
+    width: ch;
+}
     </style>
     <script src="shaders.js"></script>
     <script src="gl-matrix.js"></script>

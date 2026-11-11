@@ -12,10 +12,10 @@
 
 // @ts-check
 // handy-dandy shortcut
-const { mat4, mat3, vec4, vec3, vec2 } = glMatrix;
-
-
 // @ts-check
+// handy-dandy shortcut
+const { mat4, vec4 } = glMatrix;
+
 /** @type {WebGL2RenderingContext} */
 let gl;
 /** @type {WebGLProgram} */
